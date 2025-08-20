@@ -1,33 +1,34 @@
-# yinoj-frontend
+# OJ判题项目前端
+前端才用Vue框架 + ArcoDesign组件
+在市面星球上的项目的基础上进行了扩展开发，主要通过Cusror进行辅助开发
+## 主页/浏览题目页面
+![主页/题目页面](image/主页.png)
 
-## 根据后台快速生成前端代码
-```
-openapi --input http://localhost:8121/api/v2/api-docs --output ./generated --client axios
-```
-## Project setup
+## 做题页面
+![做题页面](image/做题页面.png)
 
-```
-npm install
-```
+## 创建题目页面
+![创建页面](image/创建题目.png)
 
-### Compiles and hot-reloads for development
+## 题目管理页面
+在项目原有页面的基础上
+![题目管理](image/题目管理.png)
 
-```
-npm run serve
-```
+## 提交信息页面
+在原有项目的基础上，对提交信息的呈现进行了优化，目前支持五种类型的判题结果：
+Accept / Wrong answer / Time Limit Exceeded / Out of Memory / Runtime Error
+![题目提交](image/提交信息.png)
 
-### Compiles and minifies for production
+## 提交详情页面
+新开发页，能够根据用户的权限查看用户的提交代码及判题信息（用户只能查看自己提交的代码，管理员能够查看所有的提交代码。
 
-```
-npm run build
-```
+如果用户提交的代码出现编译报错，可以显示编译报错的信息。
+![提交详情](image/查看提交详情.png)
 
-### Lints and fixes files
+## 登录页面
+![登录](image/登录界面.png)
 
-```
-npm run lint
-```
+## 注册界面
+新开发页面
+![登录](image/注册界面.png)
 
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).

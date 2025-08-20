@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable -->
   <div id="manageQuestionView">
     <a-table
       :ref="tableRef"
@@ -23,17 +24,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect } from "vue";
-import {
-  Page_Question_,
-  Question,
-  QuestionControllerService,
-} from "../../../generated";
+/* eslint-disable no-undef */
+import { onMounted, ref, watchEffect, h } from "vue";
+import { Question, QuestionControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
-import * as querystring from "querystring";
 import { useRouter } from "vue-router";
 
-const show = ref(true);
 const tableRef = ref();
 
 const dataList = ref([]);
@@ -67,18 +63,46 @@ onMounted(() => {
 
 // {id: "1", title: "A+ D", content: "新的题目内容", tags: "["二叉树"]", answer: "新的答案", submitNum: 0,…}
 
+const formatDateTime = (input: any) => {
+  if (!input) return "";
+  const d = new Date(input);
+  if (Number.isNaN(d.getTime())) return String(input);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mi = String(d.getMinutes()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+};
+
+const formatUuidTwoLines = (value: unknown): string => {
+  const s = String(value ?? "");
+  if (!s) return "";
+  const mid = Math.ceil(s.length / 2);
+  return `${s.slice(0, mid)}\n${s.slice(mid)}`;
+};
+
 const columns = [
   {
     title: "id",
     dataIndex: "id",
+    width: 220,
+    render: ({ record }: { record: Question }) =>
+      h(
+        "span",
+        { class: "uuid-cell" },
+        formatUuidTwoLines((record as any)?.id)
+      ),
   },
   {
     title: "标题",
     dataIndex: "title",
+    width: 320,
   },
   {
     title: "内容",
     dataIndex: "content",
+    width: 700,
   },
   {
     title: "标签",
@@ -91,14 +115,47 @@ const columns = [
   {
     title: "提交数",
     dataIndex: "submitNum",
+    width: 80,
+    render: ({ record }: { record: Question }) =>
+      h(
+        "span",
+        { class: "nowrap-cell" },
+        String((record as any)?.submitNum ?? "")
+      ),
   },
   {
     title: "通过数",
     dataIndex: "acceptedNum",
+    width: 80,
+    render: ({ record }: { record: Question }) =>
+      h(
+        "span",
+        { class: "nowrap-cell" },
+        String((record as any)?.acceptedNum ?? "")
+      ),
   },
   {
     title: "判题配置",
     dataIndex: "judgeConfig",
+    render: ({ record }: { record: Question }) => {
+      const cfgRaw = (record as any)?.judgeConfig;
+      const cfg =
+        typeof cfgRaw === "string"
+          ? (() => {
+              try {
+                return JSON.parse(cfgRaw);
+              } catch {
+                return {} as any;
+              }
+            })()
+          : cfgRaw || ({} as any);
+      const lines = [
+        `"timeLimit": ${cfg.timeLimit ?? ""}`,
+        `"memoryLimit": ${cfg.memoryLimit ?? ""}`,
+        `"stackLimit": ${cfg.stackLimit ?? ""}`,
+      ].join("\n");
+      return h("pre", { class: "judge-config" }, lines);
+    },
   },
   {
     title: "判题用例",
@@ -107,10 +164,24 @@ const columns = [
   {
     title: "用户id",
     dataIndex: "userId",
+    width: 220,
+    render: ({ record }: { record: Question }) =>
+      h(
+        "span",
+        { class: "uuid-cell" },
+        formatUuidTwoLines((record as any)?.userId)
+      ),
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
+    width: 180,
+    render: ({ record }: { record: Question }) =>
+      h(
+        "span",
+        { class: "nowrap-cell" },
+        formatDateTime((record as any)?.createTime)
+      ),
   },
   {
     title: "操作",
@@ -150,5 +221,23 @@ const doUpdate = (question: Question) => {
 
 <style scoped>
 #manageQuestionView {
+}
+/* 表头不换行 */
+:deep(.arco-table thead .arco-table-th) {
+  white-space: nowrap;
+}
+/* 判题配置三行展示 */
+.judge-config {
+  white-space: pre;
+  margin: 0;
+}
+.nowrap-cell {
+  white-space: nowrap;
+  display: inline-block;
+}
+.uuid-cell {
+  white-space: pre-line;
+  word-break: break-all;
+  display: inline-block;
 }
 </style>
