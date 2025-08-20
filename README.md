@@ -29,6 +29,6 @@ Accept / Wrong answer / Time Limit Exceeded / Out of Memory / Runtime Error
 ![登录](image/登录界面.png)
 
 ## 注册界面
-新开发页面
+在原有项目的基础上增加了注册页面
 ![登录](image/注册界面.png)
 
